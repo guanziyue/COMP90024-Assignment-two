@@ -9,7 +9,8 @@ import xml.dom.minidom
 # access_key and password. from dashboard>project> access and security>API access >view
 EC2_ACCESS_KEY = '163ce2ab5bc04a60ac6ca87a35f05a1e'
 EC2_ACCESS_PASSWORD = '807cb765017847a18467589ab2c16107'
-
+# establish connection
+# modify code from lecture5
 ec2_conn = boto.connect_ec2(aws_access_key_id=EC2_ACCESS_KEY,
                             aws_secret_access_key=EC2_ACCESS_PASSWORD,
                             is_secure=True,
@@ -17,30 +18,39 @@ ec2_conn = boto.connect_ec2(aws_access_key_id=EC2_ACCESS_KEY,
                             port=8773,
                             path='/services/Cloud',
                             validate_certs=False)
-# end of copy code
-def parse_err(err):
-    xmlobject = xml.dom.minidom.parse(err)
-    response=xmlobject.getElementsByTagName('Response')
-    Errors=response.getElementsByTagName('Errors')
-    Error=Errors.getElementsByTagName('Error')
-    Code=Error.getElementsByTagName('Code')[0]
-    Message=Error.getElementsByTagName('Message')[0]
-    return Code,Message
+
+
+# end of modified code
+# parse error information. It is a XML document with a header.
+# def parse_err(err):
+#     err_document = err.split('/n', 1)
+#     xmlobject = xml.dom.minidom.parse(err_document[1])
+#     response = xmlobject.getElementsByTagName('Response')
+#     Errors = response.getElementsByTagName('Errors')
+#     Error = Errors.getElementsByTagName('Error')
+#     Code = Error.getElementsByTagName('Code')[0]
+#     Message = Error.getElementsByTagName('Message')[0]
+#     return Code, Message
+
 
 if __name__ == '__main__':
+    # parse arguments
     arguments_parser = argparse.ArgumentParser()
     arguments_parser.add_argument('-c', type=str, help='setup or delete')
     arguments_parser.add_argument('-n', type=int, default=4, help='amount of instances')
     arguments_parser.add_argument('-v', type=int, default=250, help='indicate volume size')
     args = arguments_parser.parse_args()
+    # if argument out of range
     if not args.c:
         arguments_parser.print_help()
         sys.exit(0)
+    # setup VMs
     elif args.c.lower() == 'setup':
         instance_amount = args.n
         volume_size = args.v
         instances = []
         try:
+            # initialize VM one by one
             for i in range(instance_amount):
                 reservation = ec2_conn.run_instances('ami-190a1773',
                                                      key_name='cloud',
@@ -56,6 +66,7 @@ if __name__ == '__main__':
             sys.exit(0)
         else:
             try:
+                # attach volumes to each VM
                 for instance in instances:
                     timeout_count = 0
                     while instance.state != "running":
@@ -74,6 +85,7 @@ if __name__ == '__main__':
                 print('volume attached fail, please check your dashboard.')
                 print(err)
                 sys.exit(0)
+    # terminate all VMs
     elif args.c.lower() == 'delete':
         try:
             id_list = []
@@ -82,7 +94,7 @@ if __name__ == '__main__':
             ec2_conn.terminate_instances(instance_ids=id_list)
             print('all instance terminated.')
         except EC2ResponseError as err:
-            print('connot terminate instances')
+            print('cannot terminate instances')
             print(err)
             sys.exit(0)
     else:
