@@ -19,20 +19,7 @@ ec2_conn = boto.connect_ec2(aws_access_key_id=EC2_ACCESS_KEY,
                             path='/services/Cloud',
                             validate_certs=False)
 
-
 # end of modified code
-# parse error information. It is a XML document with a header.
-# def parse_err(err):
-#     err_document = err.split('/n', 1)
-#     xmlobject = xml.dom.minidom.parse(err_document[1])
-#     response = xmlobject.getElementsByTagName('Response')
-#     Errors = response.getElementsByTagName('Errors')
-#     Error = Errors.getElementsByTagName('Error')
-#     Code = Error.getElementsByTagName('Code')[0]
-#     Message = Error.getElementsByTagName('Message')[0]
-#     return Code, Message
-
-
 if __name__ == '__main__':
     # parse arguments
     arguments_parser = argparse.ArgumentParser()
@@ -61,7 +48,7 @@ if __name__ == '__main__':
                 print('instance id:{} is created'.format(reservation.instances[0].id))
         except EC2ResponseError as err:
             print("instance cannot be created:")
-            print(err)
+            print(err.message)
             ec2_conn.terminate_instances(instance_ids=[lambda x: x.id for instance in instances])
             sys.exit(0)
         else:
@@ -83,7 +70,7 @@ if __name__ == '__main__':
                     ec2_conn.attach_volume(vol_req.id, instance.id, '/dev/vdc')
             except EC2ResponseError as err:
                 print('volume attached fail, please check your dashboard.')
-                print(err)
+                print(err.message)
                 sys.exit(0)
     # terminate all VMs
     elif args.c.lower() == 'delete':
@@ -95,7 +82,7 @@ if __name__ == '__main__':
             print('all instance terminated.')
         except EC2ResponseError as err:
             print('cannot terminate instances')
-            print(err)
+            print(err.message)
             sys.exit(0)
     else:
         arguments_parser.print_help()
