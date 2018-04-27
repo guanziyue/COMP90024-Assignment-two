@@ -1,0 +1,30 @@
+- hosts: spark slave
+  becomes: yes
+  tasks: 
+  - name: download spark
+    get_url: 
+     url: 'http://mirror.ventraip.net.au/apache/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz'
+     dest: /usr/local
+  - name: unpack spark source code
+    unarchive: 
+      src: /usr/local/spark-2.3.0-bin-hadoop2.7.tgz
+      dest: /usr/local
+      remote_src: yes
+  - name: 
+    lineinfile:
+       dest: ~/.profile
+       insertafter: 'EOF'  
+       line: 'export SPARK_HOME=/usr/local/spark-2.3.0-bin-hadoop2.7'
+  - name: Source the profile file
+    shell: source ~/.profile
+     - name: Install spark Service
+       copy:
+        src: ./spark_slave.service
+        dest: /etc/systemd/system/spark_slave.service
+        owner: root
+        group: root
+     - name: Enable spark Service
+       systemd:
+        daemon-reload: yes
+        name: spark_slave
+        enabled: yes

@@ -1,0 +1,141 @@
+---
+- hosts: couchdb
+  become: yes
+  gather_facts: true
+  tasks: 
+  - name: Format disk
+    filesystem: 
+     fstype: ext4
+     dev: /dev/vdb
+  - name: Creates directory for volume
+    file: 
+     path: /home/ubuntu/cloud
+     state: directory
+  - name: Mount volume to directory
+    mount: 
+     path: /home/ubuntu/cloud
+     src: /dev/vdb
+     fstype: ext4
+     state: mounted
+  - name: add apt-repository for java
+    apt_repository: 
+     repo: 'ppa:webupd8team/java'
+  - name: accept oracle license
+    debconf:
+     name: oracle-java8-installer
+     question: shared/accepted-oracle-license-v1-1
+     value: 'true'
+     vtype: select
+  - name: Install software
+    apt: name={{item}}
+    with_items: 
+      - libmozjs185-dev
+      - libicu-dev
+      - libcurl4-openssl-dev
+      - build-essential 
+      - pkg-config
+      - python-tweepy
+      - curl
+      - runit
+      - erlang
+      - oracle-java8-installer
+      - ca-certificates
+      - oracle-java8-set-default
+      - git
+    allow_unauthenticated: yes
+    force: yes
+    update_cache: yes
+    state: latest
+    install_recommends: no
+  - name: download couchdb
+    get_url:
+      url: https://dist.apache.org/repos/dist/release/couchdb/source/2.1.1/apache-couchdb-2.1.1.tar.gz
+      dest: /opt
+  - name: unpack source code
+    unarchive: 
+      src: /opt/apache-couchdb-2.1.1.tar.gz
+      dest: /opt
+      remote_src: yes
+  - name: execute configure
+    command: chdir=/opt/apache-couchdb-2.1.1 ./configure
+  - name: make release
+    make: 
+      chdir: /opt/apache-couchdb-2.1.1
+      target: release
+  - name: copy couchdb to directory
+    command: cp -R /opt/apache-couchdb-2.1.1/rel/couchdb /home/ubuntu/cloud
+  - name: set node name for couchdb
+    replace: 
+      dest: /home/ubuntu/cloud/couchdb/etc/vm.args
+      regexp: '-name couchdb@localhost$'
+      replace: '-name couchdb@{{ansible_default_ipv4.address}}'
+  - name: change cookie
+    replace: 
+      dest: /home/ubuntu/cloud/couchdb/etc/vm.args
+      regexp: '^-setcookie monster$'
+      replace: '-setcookie couchdb_cluster'
+  - name: change bind address
+    lineinfile: 
+      dest: /home/ubuntu/cloud/couchdb/etc/default.ini
+      insertafter: '^\[chttpd\]$'
+      line: 'bind_address = 0.0.0.0'
+  - name: change node address
+    lineinfile:
+     dest: /home/ubuntu/cloud/couchdb/etc/default.ini
+     insertafter: '^\[httpd\]$'
+     line: 'bind_address = 0.0.0.0'
+  - name: add user
+    lineinfile:
+     dest: /home/ubuntu/cloud/couchdb/etc/default.ini
+     insertafter: '^\[admins\]$'
+     line: 'admin=admin'
+#  - name: Creates directory for volume
+#    file: 
+#     path: /etc/sv/couchdb
+#     state: directory
+#  - name: Creates directory for volume
+#    file: 
+#     path: /var/log/couchdb
+#     state: directory
+#  - name: Creates directory for volume
+#    file: 
+#     path: /etc/sv/couchdb/log
+#     state: directory
+#  - name: copy file
+#    copy: 
+#     src: ./couchdb/run
+#     dest: /etc/sv/couchdb/run
+#     owner: root
+#     group: root
+#     mode: u+x
+#  - name: copy file
+#    copy: 
+#     src: ./log/run
+#     dest: /etc/sv/couchdb/log/run
+#     owner: root
+#     group: root
+#     mode: u+x
+#  - name: create symlink
+#    file: 
+#     src: /etc/sv/couchdb/
+#     dest: /etc/service/couchdb
+#     owner: root
+#     group: root
+#     state: link   
+  - name: Install CouchDB Service
+    copy:
+        src: ./couchdb.service
+        dest: /etc/systemd/system/couchdb.service
+        owner: root
+        group: root
+
+  - name: Enable CouchDB Service
+    systemd:
+        daemon-reload: yes
+        name: couchdb
+        enabled: yes
+  - name: Start CouchDB Service
+    systemd:
+        name: couchdb
+        state: started 
+  

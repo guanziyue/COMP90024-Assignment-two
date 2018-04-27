@@ -1,0 +1,13 @@
+[Unit]
+Description=Spark Master Service
+Wants=network.target network-online.target
+After=network.target network-online.target
+
+[Service]
+Type=forking
+ExecStart=/usr/local/spark-2.3.0-bin-hadoop2.7/sbin/start-master.sh 
+ExecStop=/usr/local/spark-2.3.0-bin-hadoop2.7/sbin/stop-master.sh
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

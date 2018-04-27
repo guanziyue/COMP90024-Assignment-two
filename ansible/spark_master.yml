@@ -1,0 +1,16 @@
+---
+- hosts: spark_master
+  becomes: yes
+  tasks: 
+    - name: Install spark Service
+      copy:
+        src: ./spark.service
+        dest: /etc/systemd/system/spark.service
+        owner: root
+        group: root
+    - name: Enable master Service
+      systemd:
+        daemon-reload: yes
+        name: spark
+        enabled: yes
+
