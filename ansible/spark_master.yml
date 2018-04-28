@@ -1,16 +1,55 @@
 ---
 - hosts: spark_master
-  becomes: yes
+  become: yes
   tasks: 
-    - name: Install spark Service
-      copy:
+   - name: download spark
+     get_url: 
+      url: 'http://mirror.ventraip.net.au/apache/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz'
+      dest: /usr/local
+   - name: Start Spark Service
+     systemd:
+        name: spark
+        state: stopped
+   - name: unpack spark source code
+     unarchive: 
+      src: /usr/local/spark-2.3.0-bin-hadoop2.7.tgz
+      dest: /usr/local
+      remote_src: yes
+   - name: add SPARK_HOME
+     lineinfile:
+       dest: /home/ubuntu/.bashrc
+       insertafter: 'EOF'  
+       line: 'export SPARK_HOME=/usr/local/spark-2.3.0-bin-hadoop2.7'
+   - name: add path
+     lineinfile: 
+       dest: /home/ubuntu/.bashrc
+       insertafter: 'EOF'  
+       line: 'export PATH="$PATH:/usr/local/spark-2.3.0-bin-hadoop2.7/bin"' 
+       state: present
+   - name: execuate shell
+     shell: source /home/ubuntu/.bashrc
+     args: 
+      executable: /bin/bash
+   - name: copy spark_env
+     copy:
+        src: ./spark-env.sh
+        dest: /usr/local/spark-2.3.0-bin-hadoop2.7/conf/spark-env.sh
+        owner: root
+        group: root
+        mode: 0777        
+   - name: Install spark Service
+     copy:
         src: ./spark.service
         dest: /etc/systemd/system/spark.service
         owner: root
         group: root
-    - name: Enable master Service
-      systemd:
+   - name: Enable master Service
+     systemd:
         daemon-reload: yes
         name: spark
         enabled: yes
+   - name: Start Spark Service
+     systemd:
+        name: spark
+        state: started
 

@@ -6,7 +6,7 @@
   - name: Format disk
     filesystem: 
      fstype: ext4
-     dev: /dev/vdb
+     dev: /dev/vdc
   - name: Creates directory for volume
     file: 
      path: /home/ubuntu/cloud
@@ -15,6 +15,12 @@
     mount: 
      path: /home/ubuntu/cloud
      src: /dev/vdb
+     fstype: ext4
+     state: unmounted
+  - name: Mount volume to directory
+    mount: 
+     path: /home/ubuntu/cloud
+     src: /dev/vdc
      fstype: ext4
      state: mounted
   - name: add apt-repository for java
@@ -36,7 +42,6 @@
       - pkg-config
       - python-tweepy
       - curl
-      - runit
       - erlang
       - oracle-java8-installer
       - ca-certificates
@@ -47,6 +52,10 @@
     update_cache: yes
     state: latest
     install_recommends: no
+#  - name: stop CouchDB Service
+#    systemd:
+#        name: couchdb
+#        state: stopped
   - name: download couchdb
     get_url:
       url: https://dist.apache.org/repos/dist/release/couchdb/source/2.1.1/apache-couchdb-2.1.1.tar.gz
@@ -67,7 +76,7 @@
   - name: set node name for couchdb
     replace: 
       dest: /home/ubuntu/cloud/couchdb/etc/vm.args
-      regexp: '-name couchdb@localhost$'
+      regexp: '-name couchdb@127.0.0.1$'
       replace: '-name couchdb@{{ansible_default_ipv4.address}}'
   - name: change cookie
     replace: 
@@ -76,59 +85,25 @@
       replace: '-setcookie couchdb_cluster'
   - name: change bind address
     lineinfile: 
-      dest: /home/ubuntu/cloud/couchdb/etc/default.ini
+      dest: /home/ubuntu/cloud/couchdb/etc/local.ini
       insertafter: '^\[chttpd\]$'
       line: 'bind_address = 0.0.0.0'
-  - name: change node address
+  - name: change cluster node address
     lineinfile:
-     dest: /home/ubuntu/cloud/couchdb/etc/default.ini
+     dest: /home/ubuntu/cloud/couchdb/etc/local.ini
      insertafter: '^\[httpd\]$'
      line: 'bind_address = 0.0.0.0'
   - name: add user
     lineinfile:
-     dest: /home/ubuntu/cloud/couchdb/etc/default.ini
+     dest: /home/ubuntu/cloud/couchdb/etc/local.ini
      insertafter: '^\[admins\]$'
-     line: 'admin=admin'
-#  - name: Creates directory for volume
-#    file: 
-#     path: /etc/sv/couchdb
-#     state: directory
-#  - name: Creates directory for volume
-#    file: 
-#     path: /var/log/couchdb
-#     state: directory
-#  - name: Creates directory for volume
-#    file: 
-#     path: /etc/sv/couchdb/log
-#     state: directory
-#  - name: copy file
-#    copy: 
-#     src: ./couchdb/run
-#     dest: /etc/sv/couchdb/run
-#     owner: root
-#     group: root
-#     mode: u+x
-#  - name: copy file
-#    copy: 
-#     src: ./log/run
-#     dest: /etc/sv/couchdb/log/run
-#     owner: root
-#     group: root
-#     mode: u+x
-#  - name: create symlink
-#    file: 
-#     src: /etc/sv/couchdb/
-#     dest: /etc/service/couchdb
-#     owner: root
-#     group: root
-#     state: link   
+     line: 'admin=admin' 
   - name: Install CouchDB Service
     copy:
         src: ./couchdb.service
         dest: /etc/systemd/system/couchdb.service
         owner: root
         group: root
-
   - name: Enable CouchDB Service
     systemd:
         daemon-reload: yes

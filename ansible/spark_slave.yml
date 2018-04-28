@@ -1,30 +1,53 @@
-- hosts: spark slave
-  becomes: yes
+- hosts: spark_slave
+  become: yes
   tasks: 
   - name: download spark
     get_url: 
      url: 'http://mirror.ventraip.net.au/apache/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz'
      dest: /usr/local
+  - name: Start Spark Service
+    systemd:
+        name: spark_slave
+        state: stopped
   - name: unpack spark source code
     unarchive: 
       src: /usr/local/spark-2.3.0-bin-hadoop2.7.tgz
       dest: /usr/local
       remote_src: yes
-  - name: 
+  - name: add SPARK_HOME
     lineinfile:
-       dest: ~/.profile
+       dest: /home/ubuntu/.bashrc
        insertafter: 'EOF'  
        line: 'export SPARK_HOME=/usr/local/spark-2.3.0-bin-hadoop2.7'
-  - name: Source the profile file
-    shell: source ~/.profile
-     - name: Install spark Service
-       copy:
+  - name: add path
+    lineinfile: 
+       dest: /home/ubuntu/.bashrc
+       insertafter: 'EOF'  
+       line: 'export PATH="$PATH:/usr/local/spark-2.3.0-bin-hadoop2.7/bin"'  
+       state: present
+  - name: execute command
+    shell: source /home/ubuntu/.bashrc
+    args: 
+      executable: /bin/bash  
+  - name: copy spark_env
+    copy:
+        src: ./spark-env.sh
+        dest: /usr/local/spark-2.3.0-bin-hadoop2.7/conf/spark-env.sh
+        owner: root
+        group: root
+        mode: 0777 
+  - name: Install spark Service
+    copy:
         src: ./spark_slave.service
         dest: /etc/systemd/system/spark_slave.service
         owner: root
         group: root
-     - name: Enable spark Service
-       systemd:
+  - name: Enable spark Service
+    systemd:
         daemon-reload: yes
         name: spark_slave
         enabled: yes
+  - name: Start spark Service
+    systemd:
+        name: spark_slave
+        state: started

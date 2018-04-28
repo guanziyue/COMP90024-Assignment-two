@@ -1,15 +1,10 @@
 #!/bin/bash
-export declare -a nodes=(115.146.85.233 115.146.86.99 115.146.85.248 115.146.85.186)
+export declare nodes=(115.146.86.154 115.146.85.233 115.146.86.164 115.146.85.186)
 export masternode=`echo ${nodes} | cut -f1 -d' '`
 export othernodes=`echo ${nodes[@]} | sed s/${masternode}//`
 export size=${#nodes[@]}
 export user=admin
 export pass=admin
-
-for node in "${nodes[@]}"; do     
-    curl -XPUT "http://${node}:5984/_node/_local/_config/admins/${user}" --data "\"${pass}\""    
-    curl -XPUT "http://${user}:${pass}@${node}:5984/_node/couchdb@${node}/_config/chttpd/bind_address" --data '"0.0.0.0"'
-done
 for node in "${nodes[@]}"; do     
     curl -XPOST "http://${user}:${pass}@${masternode}:5984/_cluster_setup" \
       --header "Content-Type: application/json" \
