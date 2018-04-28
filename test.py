@@ -14,4 +14,4 @@ ec2_conn = boto.connect_ec2(aws_access_key_id='89ec4102a2394e1c83461dbea2a02fcf'
 reservations = ec2_conn.get_all_reservations()
 print('\nID: {}\tIP: {}\tPlacement: {}'.format(reservations[0].id,
  reservations[0].instances[0].private_ip_address,
- reservations[0].instances[0].placement))
+ reservations[0].instances[0].image_id))

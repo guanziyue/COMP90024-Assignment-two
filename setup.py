@@ -39,7 +39,7 @@ if __name__ == '__main__':
         try:
             # initialize VM one by one
             for i in range(instance_amount):
-                reservation = ec2_conn.run_instances('ami-190a1773',
+                reservation = ec2_conn.run_instances('ami-e2d5e55e',
                                                      key_name='cloud',
                                                      instance_type='m1.medium',
                                                      security_groups=['default'],
