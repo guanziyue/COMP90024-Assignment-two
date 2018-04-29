@@ -53,7 +53,6 @@ def check_crime(word):
             max=synset.wup_similarity(wn.synset("murder.v.01"))
     return max
 
-
 def crime_analysis(content):
     content = re.sub(r'#(\w+)\b', ' $1 ', content)
     content = re.sub(r'@\w+\b', '', content)
