@@ -11,6 +11,7 @@
     file: 
      path: /home/ubuntu/cloud
      state: directory
+     mode: 0777
   - name: Mount volume to directory
     mount: 
      path: /home/ubuntu/cloud
@@ -32,27 +33,17 @@
      question: shared/accepted-oracle-license-v1-1
      value: 'true'
      vtype: select
-  - name: pip install package
-    pip:
-     executable: pip3
-     name: {{item}}
-     with_items: 
-      - profanity
-      - requests
-      - vaderSentiment
-      - nltk
-      - couchdb
   - name: Install software
     apt: name={{item}}
     with_items: 
       - libmozjs185-dev
       - libicu-dev
       - libcurl4-openssl-dev
-      - build-essential
+      - build-essential 
       - pkg-config
-      - python-tweepy
-      - curl
       - python3-pip
+      - screen
+      - curl
       - erlang
       - oracle-java8-installer
       - ca-certificates
@@ -63,26 +54,26 @@
     update_cache: yes
     state: latest
     install_recommends: no
+  - name: install pip nltk
+    command: pip3 install nltk
+  - name: install pip requests
+    command: pip3 install requests
+  - name: install pip tweepy
+    command: pip3 install tweepy
+  - name: install pip couchdb
+    command: pip3 install couchdb
+  - name: install pip profanity
+    command: pip3 install profanity
+  - name: install pip vaderSentiment
+    command: pip3 install vaderSentiment
+  - name: install nltk wordnet
+    command: python3 -m nltk.downloader wordnet
+  - name: install nltk punkt
+    command: python3 -m nltk.downloader punkt 
 #  - name: stop CouchDB Service
 #    systemd:
 #        name: couchdb
 #        state: stopped
-  - name: install pip lirary
-    command: pip3 install nltk
-  - name: install pip lirary
-    command: pip3 install requests
-  - name: install pip lirary
-    command: pip3 install tweepy
-  - name: install pip lirary
-    command: pip3 install couchdb
-  - name: install pip lirary
-    command: pip3 install profanity
-  - name: install pip lirary
-    command: pip3 install vaderSentiment
-  - name: install pip lirary
-    command: python3 -m nltk.downloader wordnet
-  - name: install pip lirary
-    command: python3 -m nltk.downloader punkt
   - name: download couchdb
     get_url:
       url: https://dist.apache.org/repos/dist/release/couchdb/source/2.1.1/apache-couchdb-2.1.1.tar.gz
