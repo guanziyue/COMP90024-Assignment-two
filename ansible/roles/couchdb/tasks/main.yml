@@ -15,7 +15,7 @@
   install_recommends: no
 - name: download couchdb
   get_url:
-   url: https://dist.apache.org/repos/dist/release/couchdb/source/2.1.1/apache-couchdb-2.1.1.tar.gz
+   url: http://apache.melbourneitmirror.net/couchdb/source/2.1.1/apache-couchdb-2.1.1.tar.gz
    dest: /opt
 - name: unpack source code
   unarchive: 
@@ -71,8 +71,8 @@
    name: couchdb
    state: started
 - name: enable new couchdb node to cluster
-  command: "curl -XPOST \"http://admin:admin@$115.146.86.154:5984/_cluster_setup\" --header \"Content-Type: application/json\" --data \'{\"action\": \"enable_cluster\", \"bind_address\":\"0.0.0.0\", \"username\":\"admin\", \"password\":\"admin\", \"port\": \"5984\", \"remote_node\": \"{{ansible_default_ipv4.address}}\", \"remote_current_user\":\"admin\", \"remote_current_password\":\"admin\"}\'"
+  command: "curl -XPOST http://admin:admin@115.146.86.154:5984/_cluster_setup --header \"Content-Type:application/json\" --data '{\"action\":\"enable_cluster\", \"bind_address\":\"0.0.0.0\", \"username\":\"admin\", \"password\":\"admin\", \"port\":5984, \"remote_node\":\"{{ansible_default_ipv4.address}}\", \"remote_current_user\":\"admin\", \"remote_current_password\":\"admin\"}'"
 - name: Add new couchdb node to cluster
-  command: "curl -XPOST \"http://admin:admin@$115.146.86.154:5984/_cluster_setup\" --header \"Content-Type: application/json\" --data \'{\"action\": \"add_node\", \"host\":\"{{ansible_default_ipv4.address}}\",\"port\": \"5984\", \"username\": \"admin\", \"password\":\"admin\"}\'"
+  command: "curl -XPOST http://admin:admin@115.146.86.154:5984/_cluster_setup --header \"Content-Type:application/json\" --data '{\"action\":\"add_node\", \"host\":\"{{ansible_default_ipv4.address}}\",\"port\":\"5984\", \"username\":\"admin\", \"password\":\"admin\"}'"
 - name: finish cluster setup
-  command: "curl -XPOST \"http://admin:admin@$115.146.86.154:5984/_cluster_setup\" --header \"Content-Type: application/json\" --data \'{\"action\": \"finish_cluster\"}\'"
+  command: "curl -XPOST http://admin:admin@115.146.86.154:5984/_cluster_setup --header \"Content-Type:application/json\" --data '{\"action\":\"finish_cluster\"}'"

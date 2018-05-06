@@ -3,7 +3,7 @@
      fstype: ext4
      dev: /dev/vdc
 - name: Creates directory for volume
-    file: 
+  file: 
      path: /home/ubuntu/cloud
      state: directory
      mode: 0777
@@ -14,11 +14,11 @@
      fstype: ext4
      state: mounted
 - name: Install software
-    apt: name={{item}}
-    with_items: 
+  apt: name={{item}}
+  with_items: 
       - git
-    allow_unauthenticated: yes
-    force: yes
-    update_cache: yes
-    state: latest
-    install_recommends: no
+  allow_unauthenticated: yes
+  force: yes
+  update_cache: yes
+  state: latest
+  nstall_recommends: no

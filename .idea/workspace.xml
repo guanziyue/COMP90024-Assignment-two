@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9b6f0d5b-8c68-460c-b61f-f9d84723c79a" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/ansible/roles/harvestor/tasks/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ansible/roles/harvestor/tasks/main.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tweet/tweetcap_1.0.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tweet/tweetcap_1.1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tweet/tweetcap_2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tweet/tweetcap_3.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tweet/tweetcap_4.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,13 +13,37 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Analysis.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Analysis.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tweet/Analysis.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="243">
               <caret line="14" column="46" selection-start-line="14" selection-start-column="46" selection-end-line="14" selection-end-column="46" />
               <folding>
                 <element signature="e#0#68#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RNN.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../../Project/python/RNN/RNN.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="385">
+              <caret line="117" column="20" selection-start-line="117" selection-start-column="20" selection-end-line="117" selection-end-column="20" />
+              <folding>
+                <element signature="e#0#23#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DNN_leaky_relu_one_layer.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../../Project/python/DNN_leaky_relu_one_layer.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="162">
+              <caret line="60" column="31" selection-start-line="60" selection-start-column="31" selection-end-line="60" selection-end-column="31" />
+              <folding>
+                <element signature="e#0#23#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -56,6 +75,12 @@
         <option value="$PROJECT_DIR$/tweet/getdata.py" />
         <option value="$PROJECT_DIR$/tweet/tweetcap_1.1.py" />
         <option value="$PROJECT_DIR$/tweet/tweetcap.py" />
+        <option value="$PROJECT_DIR$/get3.py" />
+        <option value="$PROJECT_DIR$/get1.py" />
+        <option value="$PROJECT_DIR$/get2.py" />
+        <option value="$PROJECT_DIR$/get4.py" />
+        <option value="$PROJECT_DIR$/../../Project/python/RNN/RNN.py" />
+        <option value="$PROJECT_DIR$/../../Project/python/DNN_leaky_relu_one_layer.py" />
       </list>
     </option>
   </component>
@@ -103,7 +128,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.getdata">
+  <component name="RunManager" selected="Python.RNN">
     <configuration name="Analysis" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Boto script" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -117,6 +142,24 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tweet/Analysis.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <configuration name="RNN" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Boto script" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../Project/python/RNN" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../../Project/python/RNN/RNN.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -181,9 +224,11 @@
       <item itemvalue="Python.test" />
       <item itemvalue="Python.Analysis" />
       <item itemvalue="Python.getdata" />
+      <item itemvalue="Python.RNN" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.RNN" />
         <item itemvalue="Python.getdata" />
         <item itemvalue="Python.Analysis" />
         <item itemvalue="Python.setup" />
@@ -209,22 +254,22 @@
     <layout>
       <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.18018967" />
       <window_info anchor="bottom" id="TODO" order="10" />
-      <window_info anchor="bottom" id="Event Log" order="0" sideWeight="0.21917808" side_tool="true" visible="true" weight="0.24702059" />
+      <window_info anchor="bottom" id="Event Log" order="0" sideWeight="0.21970496" side_tool="true" visible="true" weight="0.24702059" />
       <window_info anchor="bottom" id="Version Control" order="1" />
       <window_info anchor="bottom" id="Python Console" order="2" sideWeight="0.49789253" weight="0.30877572" />
-      <window_info anchor="bottom" id="Run" order="6" sideWeight="0.7808219" weight="0.24702059" />
+      <window_info anchor="bottom" id="Run" order="6" sideWeight="0.7802951" weight="0.24702059" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="3" />
       <window_info id="Favorites" order="0" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="7" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
       <window_info anchor="right" id="Data View" order="0" />
       <window_info anchor="right" id="Commander" order="1" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Message" order="4" />
       <window_info anchor="bottom" id="Find" order="5" />
+      <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="4" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -241,16 +286,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tweet/tweetcap_1.1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6804">
-          <caret line="265" selection-start-line="265" selection-end-line="265" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tweet/Analysis.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="243">
@@ -261,16 +296,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tweet/tweetcap_1.1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6804">
-          <caret line="265" lean-forward="true" selection-start-line="265" selection-end-line="265" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/tweet/tweetcap_1.1.py" />
     <entry file="file://$PROJECT_DIR$/tweet/Analysis.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="243">
@@ -281,16 +307,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tweet/tweetcap_1.1.py">
+    <entry file="file://$PROJECT_DIR$/tweet/tweetcap_1.1.py" />
+    <entry file="file://$PROJECT_DIR$/tweet/Analysis.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="918">
-          <caret line="47" column="17" selection-start-line="47" selection-start-column="17" selection-end-line="47" selection-end-column="17" />
+        <state relative-caret-position="243">
+          <caret line="14" column="46" selection-start-line="14" selection-start-column="46" selection-end-line="14" selection-end-column="46" />
           <folding>
-            <element signature="e#0#13#0" expanded="true" />
+            <element signature="e#0#68#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/tweet/tweetcap_1.1.py" />
     <entry file="file://$PROJECT_DIR$/tweet/Analysis.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="243">
@@ -384,21 +412,52 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tweet/tweetcap_1.1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6804">
-          <caret line="265" selection-start-line="265" selection-end-line="265" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/tweet/tweetcap_1.1.py" />
     <entry file="file://$PROJECT_DIR$/../../Project/python/notrelu/DNN - 副本.py" />
     <entry file="file://$PROJECT_DIR$/tweet/tweetcap.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="6831">
           <caret line="253" column="14" selection-start-line="253" selection-start-column="14" selection-end-line="253" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/get3.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="216" column="16" selection-start-line="216" selection-start-column="16" selection-end-line="216" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/get1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1803">
+          <caret line="216" column="20" selection-start-line="216" selection-start-column="20" selection-end-line="216" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/get2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="129">
+          <caret line="169" column="8" selection-start-line="169" selection-start-column="8" selection-end-line="169" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/get4.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="216" column="20" selection-start-line="216" selection-start-column="20" selection-end-line="216" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -408,6 +467,26 @@
           <caret line="14" column="46" selection-start-line="14" selection-start-column="46" selection-end-line="14" selection-end-column="46" />
           <folding>
             <element signature="e#0#68#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../Project/python/RNN/RNN.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="385">
+          <caret line="117" column="20" selection-start-line="117" selection-start-column="20" selection-end-line="117" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../Project/python/DNN_leaky_relu_one_layer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="60" column="31" selection-start-line="60" selection-start-column="31" selection-end-line="60" selection-end-column="31" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
           </folding>
         </state>
       </provider>
