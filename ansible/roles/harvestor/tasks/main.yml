@@ -8,19 +8,40 @@
     update_cache: yes
     state: latest
     install_recommends: no
-  - name: install pip nltk
-    command: pip3 install nltk
-  - name: install pip requests
-    command: pip3 install requests
-  - name: install pip tweepy
-    command: pip3 install tweepy
-  - name: install pip couchdb
-    command: pip3 install couchdb
-  - name: install pip profanity
-    command: pip3 install profanity
-  - name: install pip vaderSentiment
-    command: pip3 install vaderSentiment
+  - name: upgrade setuptool
+    command: sudo pip3 install --upgrade setuptools
+  - name: install pip packages
+    pip: name={{item}}
+    with_items:
+      - nltk
+      - requests
+      - tweepy
+      - couchdb
+      - profanity
+      - vaderSentiment
+    executable: pip3      
+#  - name: install pip nltk
+#    command: pip3 install nltk
+#  - name: install pip requests
+#    command: pip3 install requests
+#  - name: install pip tweepy
+#    command: pip3 install tweepy
+#  - name: install pip couchdb
+#    command: pip3 install couchdb
+#  - name: install pip profanity
+#    command: pip3 install profanity
+#  - name: install pip vaderSentiment
+#    command: pip3 install vaderSentiment
   - name: install nltk wordnet
     command: python3 -m nltk.downloader wordnet
   - name: install nltk punkt
     command: python3 -m nltk.downloader punkt
+  - name: copy tweetcap.py to harvestor
+    template: 
+        src: tweetcap.py.j2
+        dest: /home/ubuntu/cloud/tweetcap.py
+        owner: root
+        group: root
+        mode: 0777
+  - name: execute python script
+    command: python3 tweetcap.py
