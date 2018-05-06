@@ -182,7 +182,6 @@ def removehttp (tweetdata):
         text = tweetdata['text']
 
     pattern = re.compile('https://t.co/\w+')
-
     pat = pattern.findall(text)
     print (pat)
     print (text)
@@ -193,7 +192,10 @@ def removehttp (tweetdata):
 
     return text
 
-
+def add_id(tweetdata):
+    id=tweetdata['id']
+    tweetdata['_id']=id
+    return tweetdata
 
 # Tweet listener
 class tweetListener(StreamListener):
@@ -203,6 +205,7 @@ class tweetListener(StreamListener):
         tweetdata = json.loads(data.encode('gbk'))
 
         tweetReal = removehttp(tweetdata)
+        tweetReal = add_id(tweetdata)
         print (tweetReal)
 
 
@@ -260,5 +263,3 @@ if __name__ == '__main__':
 
     # Only search tweets in restricted area
     stream.filter(locations = [144, -38, 145, -37])
-
-tweets.close()

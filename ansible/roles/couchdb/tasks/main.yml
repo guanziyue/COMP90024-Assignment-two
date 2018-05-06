@@ -1,0 +1,78 @@
+- name: Install software
+  apt: name={{item}}
+  with_items: 
+      - libmozjs185-dev
+      - libicu-dev
+      - libcurl4-openssl-dev
+      - build-essential 
+      - pkg-config
+      - curl
+      - erlang
+  allow_unauthenticated: yes
+  force: yes
+  update_cache: yes
+  state: latest
+  install_recommends: no
+- name: download couchdb
+  get_url:
+   url: https://dist.apache.org/repos/dist/release/couchdb/source/2.1.1/apache-couchdb-2.1.1.tar.gz
+   dest: /opt
+- name: unpack source code
+  unarchive: 
+   src: /opt/apache-couchdb-2.1.1.tar.gz
+   dest: /opt
+   remote_src: yes
+- name: execute configure
+  command: chdir=/opt/apache-couchdb-2.1.1 ./configure
+- name: make release
+  make: 
+   chdir: /opt/apache-couchdb-2.1.1
+   target: release
+- name: copy couchdb to directory
+  command: cp -R /opt/apache-couchdb-2.1.1/rel/couchdb /home/ubuntu/cloud
+- name: set node name for couchdb
+  replace: 
+   dest: /home/ubuntu/cloud/couchdb/etc/vm.args
+   regexp: '-name couchdb@127.0.0.1$'
+   replace: '-name couchdb@{{ansible_default_ipv4.address}}'
+- name: change cookie
+  replace: 
+   dest: /home/ubuntu/cloud/couchdb/etc/vm.args
+   regexp: '^-setcookie monster$'
+   replace: '-setcookie couchdb_cluster'
+- name: change bind address
+  lineinfile: 
+   dest: /home/ubuntu/cloud/couchdb/etc/local.ini
+   insertafter: '^\[chttpd\]$'
+   line: 'bind_address = 0.0.0.0'
+- name: change cluster node address
+  lineinfile:
+   dest: /home/ubuntu/cloud/couchdb/etc/local.ini
+   insertafter: '^\[httpd\]$'
+   line: 'bind_address = 0.0.0.0'
+- name: add user
+  lineinfile:
+   dest: /home/ubuntu/cloud/couchdb/etc/local.ini
+   insertafter: '^\[admins\]$'
+   line: 'admin=admin'
+- name: Install CouchDB Service
+  copy:
+   src: ./couchdb.service
+   dest: /etc/systemd/system/couchdb.service
+   owner: root
+   group: root
+- name: Enable CouchDB Service
+  systemd:
+   daemon-reload: yes
+   name: couchdb
+   enabled: yes
+- name: Start CouchDB Service
+  systemd:
+   name: couchdb
+   state: started
+- name: enable new couchdb node to cluster
+  command: "curl -XPOST \"http://admin:admin@$115.146.86.154:5984/_cluster_setup\" --header \"Content-Type: application/json\" --data \'{\"action\": \"enable_cluster\", \"bind_address\":\"0.0.0.0\", \"username\":\"admin\", \"password\":\"admin\", \"port\": \"5984\", \"remote_node\": \"{{ansible_default_ipv4.address}}\", \"remote_current_user\":\"admin\", \"remote_current_password\":\"admin\"}\'"
+- name: Add new couchdb node to cluster
+  command: "curl -XPOST \"http://admin:admin@$115.146.86.154:5984/_cluster_setup\" --header \"Content-Type: application/json\" --data \'{\"action\": \"add_node\", \"host\":\"{{ansible_default_ipv4.address}}\",\"port\": \"5984\", \"username\": \"admin\", \"password\":\"admin\"}\'"
+- name: finish cluster setup
+  command: "curl -XPOST \"http://admin:admin@$115.146.86.154:5984/_cluster_setup\" --header \"Content-Type: application/json\" --data \'{\"action\": \"finish_cluster\"}\'"

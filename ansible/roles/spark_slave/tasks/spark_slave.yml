@@ -1,0 +1,69 @@
+- hosts: spark_slave
+  become: yes
+  tasks: 
+  - name: add apt-repository for java
+    apt_repository: 
+      repo: 'ppa:webupd8team/java'
+  - name: accept oracle license
+    debconf:
+      name: oracle-java8-installer
+      question: shared/accepted-oracle-license-v1-1
+      value: 'true'
+      vtype: select
+  - name: Install software
+    apt: name={{item}}
+    with_items: 
+      - oracle-java8-installer
+      - ca-certificates
+      - oracle-java8-set-default
+    allow_unauthenticated: yes
+    force: yes
+    update_cache: yes
+    state: latest
+    install_recommends: no
+  - name: download spark
+    get_url: 
+     url: 'http://mirror.ventraip.net.au/apache/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz'
+     dest: /usr/local
+  - name: unpack spark source code
+    unarchive: 
+      src: /usr/local/spark-2.3.0-bin-hadoop2.7.tgz
+      dest: /usr/local
+      remote_src: yes
+  - name: add SPARK_HOME
+    lineinfile:
+       dest: /home/ubuntu/.bashrc
+       insertafter: 'EOF'  
+       line: 'export SPARK_HOME=/usr/local/spark-2.3.0-bin-hadoop2.7'
+  - name: add path
+    lineinfile: 
+       dest: /home/ubuntu/.bashrc
+       insertafter: 'EOF'  
+       line: 'export PATH="$PATH:/usr/local/spark-2.3.0-bin-hadoop2.7/bin"'
+       state: present
+  - name: execute command
+    shell: source /home/ubuntu/.bashrc
+    args: 
+      executable: /bin/bash  
+  - name: copy spark_env
+    template:
+        src: spark-env.sh.j2
+        dest: /usr/local/spark-2.3.0-bin-hadoop2.7/conf/spark-env.sh
+        owner: root
+        group: root
+        mode: 0777 
+  - name: Install spark Service
+    copy:
+        src: ./spark_slave.service
+        dest: /etc/systemd/system/spark_slave.service
+        owner: root
+        group: root
+  - name: Enable spark Service
+    systemd:
+        daemon-reload: yes
+        name: spark_slave
+        enabled: yes
+  - name: Start spark Service
+    systemd:
+        name: spark_slave
+        state: started

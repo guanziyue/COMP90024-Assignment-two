@@ -20,12 +20,6 @@
   - name: Mount volume to directory
     mount: 
      path: /home/ubuntu/cloud
-     src: /dev/vdb
-     fstype: ext4
-     state: unmounted
-  - name: Mount volume to directory
-    mount: 
-     path: /home/ubuntu/cloud
      src: /dev/vdc
      fstype: ext4
      state: mounted
@@ -74,7 +68,7 @@
   - name: install nltk wordnet
     command: python3 -m nltk.downloader wordnet
   - name: install nltk punkt
-    command: python3 -m nltk.downloader punkt 
+    command: python3 -m nltk.downloader punkt
 #  - name: stop CouchDB Service
 #    systemd:
 #        name: couchdb
