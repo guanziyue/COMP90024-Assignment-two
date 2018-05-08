@@ -1,0 +1,10 @@
+---
+- hosts: new
+  become: yes
+  gather_facts: true
+  roles: 
+   - common
+   - couchdb
+   - harvestor
+   - spark_slave
+   - web
