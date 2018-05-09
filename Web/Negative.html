@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/resources/css/buttons.css">
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        #main2 {
+            border: 500px;
+            float: left;
+            height: 80%;
+            width: 42%;
+        }
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 2%;
+            padding: 0;
+            background: antiquewhite;
+        }
+        #main1 {
+            border: 500px;
+            float: right;
+            height: 80%;
+            width: 42%;
+        }
+
+    </style>
+    <meta charset="UTF-8">
+    <title>Twitters related to profanity,crime,alcohol and emotion</title>
+    <script type="text/javascript" src="resources/js/echarts.js"></script>
+    <script type="text/javascript" src="resources/js/Login.js"></script>
+    <script type="text/javascript" src="resources/js/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="resources/js/jquery.couch.js"></script>
+</head>
+<div id="main1"></div>
+<div id="main2"></div>
+<script type="text/javascript">
+    login();
+    function beerAndCrime() {
+        $.couch.db("result").openDoc("result_data", {
+            success: function (data) {
+                var echart1=echarts.init(document.getElementById('main2'));
+                var echart2=echarts.init(document.getElementById('main1'));
+                var cityName=["Sydney","Melbourne","Perth","Brisbane"];
+                var senario=["alcohol","profanity","crime","positive",];
+                var alcohol=[data["Sydneycount"]-data["Sydneybeer"],
+                    data["Melbournecount"]-data["Melbournebeer"],
+                    data["Perthcount"]- data["Perthbeer"],
+                    data["Brisbanecount"]-data["Brisbanebeer"]];
+                var crime=[data["Sydneycount"]-data["Sydneycrime"],
+                    data["Melbournecount"]-data["Melbournecrime"],
+                    data["Perthcount"]-data["Perthcrime"],
+                    data["Brisbanecount"]-data["Brisbanecrime"]];
+                var positive=[data["Sydneypositive"],data["Melbournepositive"],
+                    data["Perthpositive"],data["Brisbanepositive"]];
+                var negative=[data["Sydneynegative"],data["Melbournenegative"],
+                    data["Perthnegative"],data["Brisbanenegative"]];
+                var neutral=[data["Sydneyneutral"],data["Melbourneneutral"],
+                    data["Perthneutral"],data["Brisbaneneutral"]];
+                var profanity = [data["Sydneycount"]-data["Sydneyprofanity"],
+                    data["Melbournecount"]-data["Melbourneprofanity"],
+                    data["Perthcount"]-data["Perthprofanity"],
+                    data["Brisbanecount"]-data["Brisbaneprofanity"]];
+                var sumPositive = 0;
+                var sumNegative = 0;
+                var sumNeutral = 0;
+                for(var i = 0; i < positive.length; i++)
+                {
+                    sumPositive += positive[i];
+                    sumNeutral += neutral[i];
+                    sumNegative += negative[i];
+                }
+                var option1={
+                    title:{
+                        text:'Four Passive Features',
+                    },
+
+                    legend:{
+                        data:["Profanity","Crime","Alcohol","Negative"]
+                    },
+                    xAxis:{
+                        data:cityName
+                    },
+                    yAxis:{
+
+                    },
+                    tooltip:{
+                        show:true,
+                        //formatter:'系列名:{a}<br />类目:{b}<br />数值:{c}'
+                    },
+                    series:[{
+                        name:'Profanity',
+                        type:'bar',
+                        data:profanity,
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true,
+                                    position: 'top',
+                                    textStyle: {
+                                        color: '#0a41ff'
+                                    },
+                                }}},
+                        markLine:{
+                            data:[
+                                {type:'average',name:'average',itemStyle:{
+                                        normal:{
+                                            color:'green'
+                                        }
+                                    }}
+                            ]
+                        }
+                    },{
+                        name:'Crime',
+                        type:'line',
+                        data:crime,
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true,
+                                    position: 'top',
+                                    textStyle: {
+                                        color: '#8a0eff'
+                                    },
+                                }}},
+                        markLine:{
+                            data:[
+                                {type:'average',name:'average',itemStyle:{
+                                        normal:{
+                                            color:'blue'
+                                        }
+                                    }}
+                            ]
+                        }
+                    },{
+                        name:'Alcohol',
+                        type:'bar',
+                        data:alcohol,
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true,
+                                    position: 'top',
+                                    textStyle: {
+                                        color: '#ff0de9'
+                                    },
+                                }}},
+                        markLine:{
+                            data:[
+                                {type:'average',name:'average',itemStyle:{
+                                        normal:{
+                                            color:'red'
+                                        }
+                                    }}
+                            ]
+                        }
+                    },{
+                        name:'Negative',
+                        type:'bar',
+                        data:negative,
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true,
+                                    position: 'top',
+                                    textStyle: {
+                                        color: '#000000'
+                                    },
+                                }}},
+                        markLine:{
+                            data:[
+                                {type:'average',name:'average',itemStyle:{
+                                        normal:{
+                                            color:'black'
+                                        }
+                                    }}
+                            ]
+                        }
+                    }]
+                };
+                var option2= {
+                    title: {
+                        text: 'Emotion (Four Cities Together)',
+                        x: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        x: 'left',
+                        data: ['Positive', 'Neutral', 'Negative']
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            mark: {show: true},
+                            dataView: {show: true, readOnly: false},
+                            magicType: {
+                                show: true,
+                                type: ['pie', 'funnel'],
+                                option: {
+                                    funnel: {
+                                        x: '25%',
+                                        width: '50%',
+                                        funnelAlign: 'left',
+                                        max: 1548
+                                    }
+                                }
+                            },
+                            restore: {show: true},
+                            saveAsImage: {show: true}
+                        }
+                    },
+                    calculable: true,
+                    series: [
+                        {
+                            name: 'Emotion (Four Cities Together)',
+                            type: 'pie',
+                            radius: '55%',
+                            center: ['50%', '60%'],
+                            label: {
+                                normal: {
+                                    position: 'inner',
+                                    formatter: "{b}: ({d}%)"
+                                }
+                            },
+                            data: [
+                                {value: sumPositive, name: 'Positive'},
+                                {value: sumNeutral, name: 'Neutral'},
+                                {value: sumNegative, name: 'Negative'}
+                            ]
+                        }
+                    ]
+                };
+
+                echart1.setOption(option1);
+                console.log(sumPositive,sumNeutral,sumNegative);
+                echart2.setOption(option2);
+            },
+            error:function (status) {
+                console.log(status);
+                alert("Cannot get data from database");
+            }
+        });
+    };
+    beerAndCrime();
+</script>
+<!--
+<button onclick="window.location.href='CountOnMap.html'" >Main</button>
+<button onclick="window.location.href='CountOnMap.html'" style="float: left">Previous</button>
+-->
+<div class="pagination" style="text-align: center">
+    <button onclick="window.location.href='Mood.html'">Emotion</button>
+    <select onchange="window.location.href=this.value;">
+        <option value ='Negative.html'>ViewMap</option>
+        <option value ='CountOnMap.html'>CountOnMap</option>
+        <option value='CrimeOnMap.html'>CrimeOnMap</option>
+        <option value ='OffenceInVIC.html'>OffenceInVIC(Aurin)</option>
+        <option value='NegativeOnMap.html'>NegativeOnMap</option>
+    </select>
+    <button onclick="window.location.href='index.html'">AllData</button>
+</div>
+</body>
+</html>

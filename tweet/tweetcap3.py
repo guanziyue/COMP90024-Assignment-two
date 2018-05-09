@@ -1,36 +1,38 @@
-<<<<<<< HEAD
-import requests
-import couchdb
-from requests.auth import HTTPDigestAuth
-url='http://45.113.232.90/couchdbro/twitter/_design/twitter/_view/geoindex'
-para={'include_docs':'true','reduce':'false','skip':'0','limit':'1'}
-
-message=requests.get(url,para,auth=('readonly', 'ween7ighai9gahR6'))
-=======
-import requests
-import couchdb
+import tweepy
 import json
-
 import re
+import couchdb
+
 import nltk
 from profanity import profanity
 from nltk.corpus import wordnet as wn
 from nltk.stem import WordNetLemmatizer
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
-from requests.auth import HTTPDigestAuth
+from tweepy.streaming import StreamListener
+from tweepy import OAuthHandler
+from tweepy import Stream
+
+# My keys and tokens
+consumer_key = 'LUhzyNz6wA51L0AairJT1FiHx'
+consumer_secret = 'oqRh8wi6kH5xL0EfNhCMsVofVLDDaFciGp8LgIL07DWLOh1PzC'
+access_token = '990521561974161410-CqwijiOQ65tMlCJ0Mto9IEM6BDpPxBV'
+access_token_secret = '9hVJLVGs4mgNoPZqzN8uHDwHpKbedTqCSF6JWnQ3Q5khs'
+
+# Get the authentication
+def getKeyToken():
+
+    access = {"consumer_key": consumer_key,
+            "consumer_secret": consumer_secret,
+            "access_token": access_token,
+            "access_secret": access_token_secret}
+
+    auth = tweepy.OAuthHandler(access['consumer_key'], access['consumer_secret'])
+    auth.set_access_token(access['access_token'], access['access_secret'])
+    return auth
 
 
-# Delete Origin '_id' & '_rev'
-def add_id(tweetdata):
-    del saveitem['_rev']
-    del tweetdata['_id']
-    id = tweetdata['id_str']
-    tweetdata['_id'] = id
-    return tweetdata
-
-
-# Check alcohol by key words
+# check if the sentence have a alcohol name.
 def beer_check(str):
     beerNames = ["alcoholic", "alcohol", "brewery", "beer", "wine", "shiraz", "cabernet", "sauvignon", "chardonnay",
                  "merlot", "semillon", "pinot", "noir", "riesling", "blanc", "4 Pines", "abbotsford invalid",
@@ -42,32 +44,43 @@ def beer_check(str):
                  "little world", "lobethal bierhaus", "malt shovel", "melbourne bitter", "mountain goat", "nail",
                  "nt draught", "pure blonde", "skinny blonde", "southwark bitter", "st arnou", "stone & wood",
                  "thunder road", "tooheys", "vb", "victoria bitter"]
-    strlow = str.lower()
+
     check = False
     for name in beerNames:
-        if name in strlow:
+        if name in str:
             check = True
             break
     return check
 
+# analyze sentiment. input is string,return a dictionary including pos: postive probability.
 
-# Sentiment Analysis
+#neg: negative probability. compoud: when positive int, positive, negtive int ,negative. zero, neutual
+
 def sentiment_analysis(content):
+
     senti_analyzer=SentimentIntensityAnalyzer()
     return senti_analyzer.polarity_scores(content)
 
 
+
+# check if the sentence have a profanity word.
 def profanity_analysis(content):
     content=re.sub(r'#(\w+)\b',' $1 ',content)
     content=re.sub(r'@\w+\b','',content)
+    #tokens=nltk.word_tokenize(content.lower())
+
     contain_profanity=profanity.contains_profanity(content)
 
     return contain_profanity
 
 
+
 # check if the word is relevant to crime
+
 def check_crime(word):
+
     max=0
+
     lemmatizer = WordNetLemmatizer()
     word_n = lemmatizer.lemmatize(word, 'n')
 
@@ -117,7 +130,11 @@ def check_crime(word):
     return max
 
 
+
+
+
 def crime_analysis(content):
+
     content = re.sub(r'#(\w+)\b', ' $1 ', content)
     content = re.sub(r'@\w+\b', '', content)
     tokens = nltk.word_tokenize(content.lower())
@@ -133,95 +150,105 @@ def crime_analysis(content):
     else:
         return False
 
-# Remove "http" information in tweet text
+
+
 def removehttp (tweetdata):
 
     try:
         text = tweetdata['extended_tweet']['full_text']
+
     except:
         text = tweetdata['text']
 
     pattern = re.compile('https://t.co/\w+')
+
     pat = pattern.findall(text)
+    #print (pat)
+    #print (text)
     if len(pat) is 1:
         aa = pat[0]
         text = text.replace(aa, "")
 
+
     return text
 
 
-# Save to couchdb
-def savetodb(data):
-    address = "http://admin:admin@115.146.86.154:5984/"
-    couch = couchdb.Server(address)
-
-    try:
-        db = couch.create('newtweet')  # create db
-    except:
-        db = couch['newtweet']  #
-
-    try:
-        db.save(data)
-    except:
-        pass
+def add_id(tweetdata):
+    id=tweetdata['id']
+    tweetdata['_id']=str(id)
+    return tweetdata
 
 
+# Tweet listener
+class tweetListener(StreamListener):
 
+    def on_data(self, data):
 
-# Get Message
-url='http://45.113.232.90/couchdbro/twitter/_design/twitter/_view/geoindex'
-para={'include_docs':'true','reduce':'false','skip':'0','limit':'100'}
+        tweetdata = json.loads(data.encode('gbk'))
+        tweetdata = add_id(tweetdata)
 
-offset = 100
-current = 0
+        tweetReal = removehttp(tweetdata)
+        #print (tweetReal)
 
-while (current < 1000000):
-
-
-    message=requests.get(url,para,auth=('readonly', 'ween7ighai9gahR6'))
-
-
-    current = current + offset
-    temp = current
-    para['skip'] = str(temp)
-
-    dataset = message.json() # Message to dict
-    tweets = dataset['rows'] # List of tweets
-    print ("Done! "+ str(current) + "Tweets")
-
-
-    for tweet in tweets:
-        saveitem = tweet['doc']
-
-        id = saveitem['id_str']
-        content = saveitem['text']
-        # print(id)
-        saveitem = add_id(saveitem)
-
-
-        tweetReal = removehttp(saveitem)
-        # print (tweetReal)
-
-
+        tweetid = tweetdata['id']
+        print (tweetid)
         # Call analysis functions
         sentiment = sentiment_analysis(tweetReal)
         beer = beer_check(tweetReal)
-        try:
-            profanity = profanity_analysis(tweetReal)
-        except:
-            profanity = False
+        profanity = profanity_analysis(tweetReal)
         crime = crime_analysis(tweetReal)
 
 
+        # Print
+        #print (sentiment)
+        #print (beer)
+        #print (profanity)
+        #print (crime)
+
+
         # Update
-        saveitem['sentiment'] = sentiment
-        saveitem['beer'] = beer
-        saveitem['profanity'] = profanity
-        saveitem['crime'] = crime
-
-        tweetsave = json.dumps(saveitem)
+        tweetdata['sentiment'] = sentiment
+        tweetdata['beer'] = beer
+        tweetdata['profanity'] = profanity
+        tweetdata['crime'] = crime
 
 
-        savetodb(saveitem)
+        tweetsave = json.dumps(tweetdata)
+        self.savetodb(tweetsave)
+        self.savetodb(tweetsave)
 
->>>>>>> 534be655917c5a32eb42c03acc8e70dab2a70f51
+        return True
+
+    def on_status(self, status):
+        print(status.text)
+
+    def on_error(self, status):
+        print (status)
+
+    def savetodb(self,data):
+        address = "http://admin:admin@115.146.86.154:5984/"
+        couch = couchdb.Server(address)
+        try:
+            db = couch.create('truetweet') # create db
+        except:
+            db = couch['truetweet'] #
+
+
+
+        try:
+            db.save(json.loads(data.encode('gbk')))
+        except:
+            pass
+
+
+if __name__ == '__main__':
+
+    #This handles Twitter authetification and the connection to Twitter Streaming API
+
+    listener = tweetListener()
+    stream = Stream(getKeyToken(), listener)
+
+    # Only search tweets in restricted area
+    stream.filter(locations = [115.2, -32.3, 116.2, -31.2])
+
+tweets.close()
