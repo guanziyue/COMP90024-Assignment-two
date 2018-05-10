@@ -1,5 +1,0 @@
-tweet amount and population
-sentiment and income
-vulgar word educaion
-crime word and offence number
-alcohol corpus and alcohol consuming
