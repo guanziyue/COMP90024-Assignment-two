@@ -9,29 +9,31 @@
     state: latest
     install_recommends: no
   - name: upgrade setuptool
-    command: sudo pip3 install --upgrade setuptools
-  - name: install pip packages
-    pip: name={{item}}
-    with_items:
-      - nltk
-      - requests
-      - tweepy
-      - couchdb
-      - profanity
-      - vaderSentiment
-    executable: pip3      
-#  - name: install pip nltk
-#    command: pip3 install nltk
-#  - name: install pip requests
-#    command: pip3 install requests
-#  - name: install pip tweepy
-#    command: pip3 install tweepy
-#  - name: install pip couchdb
-#    command: pip3 install couchdb
-#  - name: install pip profanity
-#    command: pip3 install profanity
-#  - name: install pip vaderSentiment
-#    command: pip3 install vaderSentiment
+    become: yes
+    command: pip3 install --upgrade setuptools
+#  - name: install pip packages
+#    pip: name={{item}}
+#    with_items:
+#      - nltk
+#      - requests
+#      - tweepy
+#      - couchdb
+#      - profanity
+#      - vaderSentiment
+#    executable: pip3  
+#    become: yes    
+  - name: install pip nltk
+    command: pip3 install nltk
+  - name: install pip requests
+    command: pip3 install requests
+  - name: install pip tweepy
+    command: pip3 install tweepy
+  - name: install pip couchdb
+    command: pip3 install couchdb
+  - name: install pip profanity
+    command: pip3 install profanity
+  - name: install pip vaderSentiment
+    command: pip3 install vaderSentiment
   - name: install nltk wordnet
     command: python3 -m nltk.downloader wordnet
   - name: install nltk punkt
@@ -44,4 +46,4 @@
         group: root
         mode: 0777
   - name: execute python script
-    command: python3 tweetcap.py
+    shell: nohup python3 tweetcap.py &
