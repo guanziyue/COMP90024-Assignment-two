@@ -11,3 +11,9 @@
   systemd:
     name: apache2
     state: started
+- name: copy code to server
+  copy:
+   src: web/
+   dest: /var/www/html
+   owner: root
+   group: root
