@@ -1,5 +1,5 @@
 - name: Format disk
-    filesystem: 
+  filesystem: 
      fstype: ext4
      dev: /dev/vdc
 - name: Creates directory for volume
@@ -8,7 +8,7 @@
      state: directory
      mode: 0777
 - name: Mount volume to directory
-    mount: 
+  mount: 
      path: /home/ubuntu/cloud
      src: /dev/vdb
      fstype: ext4

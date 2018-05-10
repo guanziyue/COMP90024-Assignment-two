@@ -1,0 +1,15 @@
+[Unit]
+Description=Spark Worker Service
+After=network.target
+After=systemd-user-sessions.service
+After=network-online.target
+
+[Service]
+User=root
+Type=forking
+ExecStart=/usr/local/spark-2.3.0-bin-hadoop2.7/sbin/start-slave.sh spark://115.146.85.233:7077
+ExecStop=/usr/local/spark-2.3.0-bin-hadoop2.7/sbin/stop-slave.sh
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
