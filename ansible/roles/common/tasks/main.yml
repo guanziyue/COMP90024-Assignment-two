@@ -1,18 +1,18 @@
-- name: Format disk
-  filesystem: 
-     fstype: ext4
-     dev: /dev/vdc
+#- name: Format disk
+#  filesystem: 
+#     fstype: ext4
+#     dev: /dev/vdc
 - name: Creates directory for volume
   file: 
      path: /home/ubuntu/cloud
      state: directory
      mode: 0777
-- name: Mount volume to directory
-  mount: 
-     path: /home/ubuntu/cloud
-     src: /dev/vdb
-     fstype: ext4
-     state: mounted
+#- name: Mount volume to directory
+#  mount: 
+#     path: /home/ubuntu/cloud
+#     src: /dev/vdb
+#     fstype: ext4
+#     state: mounted
 - name: Install software
   apt: name={{item}}
   with_items: 
